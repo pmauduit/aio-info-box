@@ -42,6 +42,7 @@ discard_cb(void *contents, size_t size, size_t nmemb, void *userp)
 
 const std::string OurHome::loginUrl = OURHOME_LOGIN_URL;
 const std::string OurHome::choresUrl = OURHOME_CHORES_URL;
+const std::string OurHome::shoppingUrl = OURHOME_SHOPPING_URL;
 
 OurHome::OurHome() {
   this->curlCtx = curl_easy_init();
@@ -110,20 +111,20 @@ void OurHome::login(std::string username, std::string password) {
 }
 
 /**
- * Retrieves the planned chores from the OurHome App API.
- * Note: this will discard the upcoming & the done ones.
- *
+ * Resets the CURL context, and performs
+ * an authenticated request.
  */
-std::list<std::string> OurHome::getChores() {
-
-  std::list<std::string> ret;
-
+std::string OurHome::doAuthenticatedRequest(const std::string &url) {
+  std::string ret;
+  // Returns an empty string if not connected
   if (this->sessionid.empty()) {
     return ret;
   }
+  // resets the curl context
   curl_easy_reset(this->curlCtx);
   CURLcode res;
   struct curl_slist *customHeaders = NULL;
+
   std::stringbuf * contentChunk = new std::stringbuf();
 
   std::string cookie;
@@ -131,7 +132,7 @@ std::list<std::string> OurHome::getChores() {
   cookie.append(this->sessionid);
   customHeaders = curl_slist_append(customHeaders, cookie.c_str());
 
-  curl_easy_setopt(this->curlCtx, CURLOPT_URL, OurHome::choresUrl.c_str());
+  curl_easy_setopt(this->curlCtx, CURLOPT_URL, url.c_str());
   curl_easy_setopt(this->curlCtx, CURLOPT_WRITEFUNCTION, write_cb);
   curl_easy_setopt(this->curlCtx, CURLOPT_WRITEDATA, (void *) contentChunk);
   curl_easy_setopt(this->curlCtx, CURLOPT_HTTPHEADER, customHeaders);
@@ -146,11 +147,28 @@ std::list<std::string> OurHome::getChores() {
     delete contentChunk;
     return ret;
   }
+  ret = contentChunk->str();
 
   curl_slist_free_all(customHeaders);
+  delete contentChunk;
+  return ret;
+}
+
+/**
+ * Retrieves the planned chores from the OurHome App API.
+ *
+ * Note: this will discard the upcoming & the done ones.
+ *
+ * Note2: entries will be transliterated (i.e. 'é' -> 'e'),
+ *   as the goal is to display them onto a LCD screen.
+ */
+std::list<std::string> OurHome::getChores() {
+  std::list<std::string> ret;
+
+  std::string retFromApi = doAuthenticatedRequest(OurHome::choresUrl);
   Json::Reader r;
   Json::Value v;
-  r.parse(contentChunk->str(), v);
+  r.parse(retFromApi, v);
   for (int i = 0 ; i  < v["objects"].size(); i++) {
     std::string desc = v["objects"][i]["description"].asString();
     // List "T": "TO-DO"
@@ -165,10 +183,34 @@ std::list<std::string> OurHome::getChores() {
       std::cout << downgraded << std::endl;
     }
   }
-  delete contentChunk;
 
   return ret;
 
 }
 
+/**
+ * Retrieves the shopping list from the OurHome API.
+ *
+ * Note: only items with "added_to_current_house_list" set to true
+ * are listed.
+ * Note2: As the previous method, items are transliterated.
+ */
+std::list<std::string> OurHome::getShoppingList() {
+  std::list<std::string> ret;
+  std::string retFromApi = doAuthenticatedRequest(OurHome::shoppingUrl);
+  Json::Reader r;
+  Json::Value v;
+  r.parse(retFromApi, v);
+  for (int i = 0 ; i  < v["objects"].size(); i++) {
+    std::string name = v["objects"][i]["name"].asString();
+    if (v["objects"][i]["added_to_current_house_list"].asBool()) {
+      char * transliterated = g_str_to_ascii(name.c_str(), NULL);
+      std::string downgraded(transliterated);
+      ret.push_back(downgraded);
+      free(transliterated);
+      std::cout << downgraded << std::endl;
+    }
+  }
 
+  return ret;
+}

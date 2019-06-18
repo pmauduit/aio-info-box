@@ -10,8 +10,8 @@ size_t
 discard_cb(void *, size_t, size_t, void *);
 
 #define OURHOME_LOGIN_URL  "https://api.ourhomeapp.com/api/v1/users/login/"
-#define OURHOME_CHORES_URL "https://api.ourhomeapp.com/api/v1/tasks/?limit=23&is_active=true&sorting=true&is_event=false"
-
+#define OURHOME_CHORES_URL "https://api.ourhomeapp.com/api/v1/tasks/?limit=25&is_active=true&sorting=true&is_event=false"
+#define OURHOME_SHOPPING_URL "https://api.ourhomeapp.com/api/v1/shopping_items/?limit=25&is_active=true&sorting=true"
 
 class OurHome {
 
@@ -21,6 +21,7 @@ class OurHome {
     ~OurHome();
     void login(std::string username, std::string password);
     std::list<std::string> getChores();
+    std::list<std::string> getShoppingList();
 
   private:
     std::string sessionid;
@@ -29,8 +30,10 @@ class OurHome {
 
     const static std::string loginUrl;
     const static std::string choresUrl;
+    const static std::string shoppingUrl;
 
     void extractSessionId(std::stringbuf *);
+    std::string doAuthenticatedRequest(const std::string &url);
 
 };
 

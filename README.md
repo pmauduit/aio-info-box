@@ -1,0 +1,49 @@
+# About
+
+My wife and I are using the OurHome application to schedule the tasks &
+groceries list. My idea was to have a "TODO Box" based on a RaspberryPI & and a
+Liquid Crystal LCD screen to show out our data from the OurHome app directly
+into the screen. The box can be plugged onto the fridge.
+
+Then after, I decided that any data could be printed out: we also have a
+raspberry PI running on our balcony (named `outdoor`, with the outdoor
+temperature as well as a pollution - PM10 & PM2.5 - metrics gathering) that
+could also be desplayed.
+
+The idea would be to have a "All-in-One" info box directly in our kitchen.
+
+* Pollution metrics printing
+* TODO / Chores listing
+* Groceries list
+* Outdoor & indoor temperature
+* ...
+
+So this project is about:
+
+* Basically getting data from the OurHome App
+* Getting data from elsewhere (grafana ?)
+* Parsing and putting them on the LCD screen regularly
+
+# Prototype
+
+## Screenshot
+
+## raspberry pi box schematics
+
+To be cut with a Laser cutter.
+
+
+# Caveats
+
+The LCD screen is unable to print out accented characters, and well we are
+living and exchanging in french ...  That is why after having tried to use the
+`iconv` library with no luck, I finally used the libglib to transliterate our
+UTF-8 strings into ASCII.
+
+
+# Requirements
+
+* libcurl (package `libcurl4-gnutls-dev`)
+* libjson-cpp (package `libjsoncpp-dev`)
+* libglib (package `libglib2.0-dev`)
+

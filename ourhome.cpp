@@ -48,6 +48,14 @@ OurHome::OurHome() {
   this->chores = std::list<std::string>();
 }
 
+OurHome::~OurHome() {
+  curl_easy_cleanup(this->curlCtx);
+}
+
+/**
+ * Extract the sessionid token after a successful authentication
+ * onto OurHome.
+ */
 void OurHome::extractSessionId(std::stringbuf * headers) {
   std::stringstream hh(headers->str());
   for (std::string line ; std::getline(hh, line); ) {
@@ -58,6 +66,9 @@ void OurHome::extractSessionId(std::stringbuf * headers) {
   }
 }
 
+/**
+ * Performs a login onto the OurHome API
+ */
 void OurHome::login(std::string username, std::string password) {
   struct curl_slist *customHeaders = NULL;
   CURLcode res;
@@ -98,6 +109,11 @@ void OurHome::login(std::string username, std::string password) {
   delete headerChunk;
 }
 
+/**
+ * Retrieves the planned chores from the OurHome App API.
+ * Note: this will discard the upcoming & the done ones.
+ *
+ */
 std::list<std::string> OurHome::getChores() {
 
   std::list<std::string> ret;
@@ -154,11 +170,5 @@ std::list<std::string> OurHome::getChores() {
   return ret;
 
 }
-
-
-OurHome::~OurHome() {
-  curl_easy_cleanup(this->curlCtx);
-}
-
 
 

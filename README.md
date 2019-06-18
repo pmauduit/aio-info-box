@@ -24,14 +24,20 @@ So this project is about:
 * Getting data from elsewhere (grafana ?)
 * Parsing and putting them on the LCD screen regularly
 
+I decided to do it in C/C++, because my first attempts was by using an I2C
+library in C++, and I wanted to dig in the language once again.
+
 # Prototype
 
 ## Screenshot
+
+![LCD screen plugged into a Raspberry PI via I2C](docs/liquid-crystal-lcd.jpg)
 
 ## raspberry pi box schematics
 
 To be cut with a Laser cutter.
 
+![Laser cut layout for the box](docs/box_105x35x67_5mm.svg)
 
 # Caveats
 

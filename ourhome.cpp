@@ -43,6 +43,7 @@ discard_cb(void *contents, size_t size, size_t nmemb, void *userp)
 const std::string OurHome::loginUrl = OURHOME_LOGIN_URL;
 const std::string OurHome::choresUrl = OURHOME_CHORES_URL;
 const std::string OurHome::shoppingUrl = OURHOME_SHOPPING_URL;
+const std::string OurHome::logoutUrl = OURHOME_LOGOUT_URL;
 
 OurHome::OurHome() {
   this->curlCtx = curl_easy_init();
@@ -109,6 +110,46 @@ void OurHome::login(std::string username, std::string password) {
   curl_slist_free_all(customHeaders);
   delete headerChunk;
 }
+
+/**
+ * Logs out from OurHome.
+ */
+void OurHome::logout() {
+  if (this->sessionid.empty()) {
+    return;
+  }
+
+  // resets the curl context
+  curl_easy_reset(this->curlCtx);
+
+  struct curl_slist *customHeaders = NULL;
+  std::string cookie;
+  cookie.append("Cookie: ");
+  cookie.append(this->sessionid);
+  customHeaders = curl_slist_append(customHeaders, cookie.c_str());
+
+  CURLcode res;
+  curl_easy_reset(this->curlCtx);
+  curl_easy_setopt(this->curlCtx, CURLOPT_URL, OurHome::logoutUrl.c_str());
+  curl_easy_setopt(this->curlCtx, CURLOPT_HEADERFUNCTION, discard_cb);
+  curl_easy_setopt(this->curlCtx, CURLOPT_WRITEFUNCTION, discard_cb);
+  curl_easy_setopt(this->curlCtx, CURLOPT_HTTPHEADER, customHeaders);
+
+  res = curl_easy_perform(this->curlCtx);
+
+  if(res != CURLE_OK) {
+    std::cerr <<  "curl_easy_perform() failed: " <<
+              curl_easy_strerror(res) << std::endl;
+    curl_slist_free_all(customHeaders);
+    return;
+  }
+
+  curl_slist_free_all(customHeaders);
+  this->sessionid = "";
+  return;
+}
+
+
 
 /**
  * Resets the CURL context, and performs

@@ -7,10 +7,9 @@
 
 int main(int argc, char ** argv) {
   OurHome ou;
+  ou.login("login", "password");
 
   std::cout << " BLACK POILUS -- " << std::endl;
-
-  ou.login("email", "password");
 
   std::cout << std::endl << "== Chores (TO-DO)" << std::endl;
   ou.getChores();
@@ -18,5 +17,6 @@ int main(int argc, char ** argv) {
   std::cout << std::endl << "== Groceries (shopping list)" << std::endl;
   ou.getShoppingList();
 
+  ou.logout();
   return 0;
 }

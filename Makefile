@@ -5,11 +5,14 @@ all: main
 clean:
 	rm -rf *.o main unaccent
 
-ourhome.o: ourhome.cpp ourhome.h 
-	g++ -ggdb -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/jsoncpp -c ourhome.cpp
+LiquidCrystal.o: LiquidCrystal_I2C.cpp LiquidCrystal_I2C.h
+	g++ -c LiquidCrystal_I2C.cpp
 
-main.o: main.cpp ourhome.o
+ourhome.o: ourhome.cpp ourhome.h 
+	g++ -ggdb `pkg-config glib-2.0 --cflags --libs` -I/usr/include/jsoncpp -c ourhome.cpp
+
+main.o: main.cpp ourhome.o LiquidCrystal.o
 	g++ -ggdb -c main.cpp
 
 main: main.o
-	g++ -ggdb -lcurl -ljsoncpp -lglib-2.0 *.o -o main
+	g++ -ggdb -lcurl -ljsoncpp -lglib-2.0 -lwiringPi *.o -o main

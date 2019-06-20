@@ -221,7 +221,6 @@ std::list<std::string> OurHome::getChores() {
       std::string downgraded(transliterated);
       ret.push_back(downgraded);
       free(transliterated);
-      std::cout << downgraded << std::endl;
     }
   }
 
@@ -249,9 +248,7 @@ std::list<std::string> OurHome::getShoppingList() {
       std::string downgraded(transliterated);
       ret.push_back(downgraded);
       free(transliterated);
-      std::cout << downgraded << std::endl;
     }
   }
-
   return ret;
 }

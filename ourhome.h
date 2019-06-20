@@ -1,6 +1,7 @@
 #ifndef __OURHOME_H
 #define __OURHOME_H
 
+#include <curl/curl.h>
 #include <list>
 
 size_t

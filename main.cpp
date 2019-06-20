@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "ourhome.h"
+#include "button.h"
 #include "LiquidCrystal_I2C.h"
 
 void display_shift (LiquidCrystal_I2C * const LCD, const std::string &a, const std::string &b) {
@@ -40,6 +41,8 @@ int main(int argc, char ** argv) {
   OurHome ou;
   LiquidCrystal_I2C * LCD = new LiquidCrystal_I2C(0x3f, 16, 2);
   init_lcd(LCD);
+  GPIOButton btn;
+
   ou.login("login", "password");
 
   std::cout << " BLACK POILUS -- " << std::endl;

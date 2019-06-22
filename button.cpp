@@ -9,6 +9,8 @@ static uint64_t now = 1, last = 0;
 
 GPIOButton::GPIOButton() {
   wiringPiSetup();
+  pinMode(16, INPUT);
+  pullUpDnControl(16, PUD_DOWN);
   wiringPiISR (16, INT_EDGE_FALLING, this->buttonPressed) ;
 }
 

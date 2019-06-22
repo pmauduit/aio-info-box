@@ -62,10 +62,10 @@ int main(int argc, char ** argv) {
 
   ou.login("login", "password");
  
-  std::list<std::string> chores = ou.getChores();
-  std::list<std::string> shoppingList = ou.getShoppingList();
 
   while (true) {
+    std::list<std::string> chores = ou.getChores();
+    std::list<std::string> shoppingList = ou.getShoppingList();
     int i = 1;
     for (auto const & chore : chores) {
       std::stringstream currentChore;

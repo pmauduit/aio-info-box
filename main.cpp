@@ -16,7 +16,6 @@ bool waitOrInterrupt(unsigned int duration) {
     for (unsigned int i = 0 ; i < duration ; i += SLEEP_POLL) {
       if (registeredButton->isPressed()) {
 	 registeredButton->acknowledge();
-	 std::cout << "acknowledged: interruption required" << std::endl;
 	 return true;
       }
       usleep(SLEEP_POLL);
@@ -42,7 +41,7 @@ void display_shift (LiquidCrystal_I2C * const LCD, const std::string &a, const s
 	    copy2.erase(0, 1);
         }
 	if (waitOrInterrupt(400000)) {
-	  break;
+	  return;
 	};
     } while ((copy1.length() >= 16) || (copy2.length() >= 16));
     waitOrInterrupt(1000000);
@@ -62,28 +61,30 @@ int main(int argc, char ** argv) {
   GPIOButton btn;
 
   ou.login("login", "password");
-
-  std::cout << " BLACK POILUS -- " << std::endl;
-
-  std::cout << std::endl << "== Chores (TO-DO)" << std::endl;
+ 
   std::list<std::string> chores = ou.getChores();
-
-  int i = 1;
-  for (auto const & chore : chores) {
-    std::stringstream currentChore;
-    currentChore <<  "" << i << ". " << chore;
-    display_shift(LCD, "- TODO", currentChore.str());
-    i++;
-  }
-  std::cout << std::endl << "== Groceries (shopping list)" << std::endl;
   std::list<std::string> shoppingList = ou.getShoppingList();
-  i = 1;
-  std::cout << "shoppingList size: " << shoppingList.size() << std::endl;
-  for (auto const & item : shoppingList) {
-    std::stringstream currentItem;
-    currentItem << "" << i << ". " << item;
-    display_shift(LCD, "- To Buy", currentItem.str());
-    i++;
+
+  while (true) {
+    int i = 1;
+    for (auto const & chore : chores) {
+      std::stringstream currentChore;
+      std::stringstream title;
+      title << "TODO (" << i << "/" << chores.size() << ")";
+      currentChore <<  "" << i << ". " << chore;
+      display_shift(LCD, title.str(), currentChore.str());
+      i++;
+    }
+
+    i = 1;
+    for (auto const & item : shoppingList) {
+      std::stringstream currentItem;
+      std::stringstream title;
+      title << "COURSES (" << i << "/" << shoppingList.size() << ")";
+      currentItem << "" << i << ". " << item;
+      display_shift(LCD, title.str(), currentItem.str());
+      i++;
+    }
   }
   ou.logout();
   return 0;

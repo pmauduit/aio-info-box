@@ -12,7 +12,6 @@ void buttonPressed(void) {
 		    std::chrono::system_clock::now().time_since_epoch()
 		  ).count();
   if (now - last > THRESHOLD) {
-    std::cout << "Button pressed" << std::endl;
     registeredButton->setPressed(TRUE);
     last = now;
   }

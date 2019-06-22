@@ -8,6 +8,22 @@
 #include "button.h"
 #include "LiquidCrystal_I2C.h"
 
+#define SLEEP_POLL 10000
+
+extern GPIOButton * registeredButton;
+
+bool waitOrInterrupt(unsigned int duration) {
+    for (unsigned int i = 0 ; i < duration ; i += SLEEP_POLL) {
+      if (registeredButton->isPressed()) {
+	 registeredButton->acknowledge();
+	 std::cout << "acknowledged: interruption required" << std::endl;
+	 return true;
+      }
+      usleep(SLEEP_POLL);
+    }
+    return false;
+}
+
 void display_shift (LiquidCrystal_I2C * const LCD, const std::string &a, const std::string &b) {
     std::string copy1(a);
     std::string copy2(b);
@@ -25,9 +41,11 @@ void display_shift (LiquidCrystal_I2C * const LCD, const std::string &a, const s
 	if (copy2.length() >= 16) {
 	    copy2.erase(0, 1);
         }
-	usleep(400000);
+	if (waitOrInterrupt(400000)) {
+	  break;
+	};
     } while ((copy1.length() >= 16) || (copy2.length() >= 16));
-    sleep(1);
+    waitOrInterrupt(1000000);
     return;
 }
 
@@ -56,7 +74,6 @@ int main(int argc, char ** argv) {
     currentChore <<  "" << i << ". " << chore;
     display_shift(LCD, "- TODO", currentChore.str());
     i++;
-    sleep(1);
   }
   std::cout << std::endl << "== Groceries (shopping list)" << std::endl;
   std::list<std::string> shoppingList = ou.getShoppingList();
@@ -67,7 +84,6 @@ int main(int argc, char ** argv) {
     currentItem << "" << i << ". " << item;
     display_shift(LCD, "- To Buy", currentItem.str());
     i++;
-    sleep(1);
   }
   ou.logout();
   return 0;

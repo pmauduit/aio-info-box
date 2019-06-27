@@ -23,7 +23,6 @@ const std::string OurHome::logoutUrl = OURHOME_LOGOUT_URL;
 
 OurHome::OurHome() {
   this->curlCtx = curl_easy_init();
-  this->chores = std::list<std::string>();
 }
 
 OurHome::~OurHome() {

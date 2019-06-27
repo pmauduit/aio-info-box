@@ -29,7 +29,6 @@ class OurHome {
   private:
     std::string sessionid;
     CURL * curlCtx = NULL;
-    std::list<std::string> chores;
 
     const static std::string loginUrl;
     const static std::string logoutUrl;

@@ -11,7 +11,7 @@ curl_common.o: curl_common.cpp curl_common.h
 	g++ -c curl_common.cpp
 
 GrafanaModule: GrafanaModule.cpp GrafanaModule.h curl_common.o
-	g++ -std=c++11 -o GrafanaModule GrafanaModule.cpp
+	g++ -std=c++11 -I/usr/include/jsoncpp -lcurl -ljsoncpp curl_common.o -o GrafanaModule GrafanaModule.cpp
 
 button.o: button.cpp button.h
 	g++ -c button.cpp

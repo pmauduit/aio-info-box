@@ -11,8 +11,8 @@ class GrafanaModule {
     GrafanaModule(const std::string & endpoint);
     ~GrafanaModule();
     double getCurrentOutdoorTemperature() const;
-    double getOutdoorPm10() const;
-    double getOutdoorPm25() const;
+    double getCurrentOutdoorPm10() const;
+    double getCurrentOutdoorPm25() const;
 
   private:
     CURL * curlCtx = NULL;

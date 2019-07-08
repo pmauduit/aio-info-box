@@ -9,6 +9,8 @@
 #include "LiquidCrystal_I2C.h"
 
 #define SLEEP_POLL 10000
+#define LC_ADDRESS 0x27 // or 0x3f, YMMV
+
 
 extern GPIOButton * registeredButton;
 
@@ -56,7 +58,7 @@ void init_lcd(LiquidCrystal_I2C * const LCD) {
 
 int main(int argc, char ** argv) {
   OurHome ou;
-  LiquidCrystal_I2C * LCD = new LiquidCrystal_I2C(0x3f, 16, 2);
+  LiquidCrystal_I2C * LCD = new LiquidCrystal_I2C(LC_ADDRESS, 16, 2);
   init_lcd(LCD);
   GPIOButton btn;
 

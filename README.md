@@ -39,6 +39,25 @@ To be cut with a Laser cutter.
 
 ![Laser cut layout for the box](docs/box_105x35x67_5mm.svg)
 
+## Finding the i2c address
+
+To find the i2c address for the screen, one can use the `i2cdetect` command:
+
+```
+$ i2cdetect -y 1
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+20: -- -- -- -- -- -- -- 27 -- -- -- -- -- -- -- -- 
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+70: -- -- -- -- -- -- -- --                         
+```
+
+Then we have to adapt in the source code (`main.cpp`) the constant `LC_ADDRESS`.
+
 # Caveats
 
 The LCD screen is unable to print out accented characters, and well we are

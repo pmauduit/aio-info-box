@@ -25,6 +25,7 @@ class OurHome {
     void logout();
     std::list<std::string> getChores();
     std::list<std::string> getShoppingList();
+    bool logged() { return ! sessionid.empty(); }
 
   private:
     std::string sessionid;

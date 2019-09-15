@@ -258,13 +258,3 @@ double GrafanaModule::getYesterdayElectricConsumption() const {
   return ret;
 }
 
-int main(void) {
-  GrafanaModule gm("https://metrics.spironet.fr/");
-
-  std::cout << "current outdoor temperature: " << gm.getCurrentOutdoorTemperature() << " C" << std::endl;
-  std::cout << "current PM10 level: " << gm.getCurrentOutdoorPm10() <<  "microg/m3" << std::endl;
-  std::cout << "current PM2.5 level: " << gm.getCurrentOutdoorPm25() << "microg/m3"  << std::endl;
-  std::cout << "Electric consumption from yesterday: " << gm.getYesterdayElectricConsumption() << " KWh" << std::endl;
-
-  return 0;
-}

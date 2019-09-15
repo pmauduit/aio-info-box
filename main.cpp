@@ -65,10 +65,12 @@ int main(int argc, char ** argv) {
   GPIOButton btn;
   GrafanaModule gm("https://metrics.spironet.fr/");
 
-  ou.login("login", "password");
  
 
   while (true) {
+    if (! ou.logged()) {
+      ou.login("login", "password");
+    }
     std::list<std::string> chores = ou.getChores();
     std::list<std::string> shoppingList = ou.getShoppingList();
     int i = 1;

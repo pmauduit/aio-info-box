@@ -1,11 +1,13 @@
 #include <unistd.h>
 
 #include <iostream>
+#include <iomanip>
 #include <cstring>
 #include <sstream>
 
 #include "ourhome.h"
 #include "button.h"
+#include "GrafanaModule.h"
 #include "LiquidCrystal_I2C.h"
 
 #define SLEEP_POLL 10000
@@ -61,6 +63,7 @@ int main(int argc, char ** argv) {
   LiquidCrystal_I2C * LCD = new LiquidCrystal_I2C(LCD_ADDRESS, 16, 2);
   init_lcd(LCD);
   GPIOButton btn;
+  GrafanaModule gm("https://metrics.spironet.fr/");
 
   ou.login("login", "password");
  
@@ -87,7 +90,27 @@ int main(int argc, char ** argv) {
       display_shift(LCD, title.str(), currentItem.str());
       i++;
     }
+
+    // GrafanaModule
+    double outdoorTemp = gm.getCurrentOutdoorTemperature();
+    double pm10 = gm.getCurrentOutdoorPm10();
+    double pm25 = gm.getCurrentOutdoorPm25();
+    double electricConsumption = gm.getYesterdayElectricConsumption();
+    std::stringstream stream;
+    stream << std::setprecision(2) << outdoorTemp << " C";
+    display_shift(LCD, "OUTDOOR TEMP", stream.str());
+
+    stream.str("");
+    stream << std::setprecision(2) << pm10 << " microg/m3";
+    display_shift(LCD, "OUTDOOR PM10", stream.str());
+    stream.str("");
+    stream << std::setprecision(2) << pm25 << " microg/m3";
+    display_shift(LCD, "OUTDOOR PM25", stream.str());
+    stream.str("");
+    stream << std::setprecision(2) << electricConsumption << " KWh";
+    display_shift(LCD, "ELEC.  (D-1)", stream.str());
   }
+
   ou.logout();
   return 0;
 }

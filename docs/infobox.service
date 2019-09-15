@@ -1,0 +1,10 @@
+[Unit]
+Description=black poilus info box
+After=wpa_supplicant.service
+
+[Service]
+Type=simple
+ExecStart=/home/pi/src/aio-info-box/main &
+
+[Install]
+WantedBy=multi-user.target

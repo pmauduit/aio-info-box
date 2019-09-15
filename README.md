@@ -67,6 +67,16 @@ https://raw.githubusercontent.com/ppelleti/hs-wiringPi/master/pin-diagram.png
 One of the pin has to be wired onto the "pin 16", the other one can go onto a
 3.3V output.
 
+# Launching as a service (systemd configuration)
+
+A sample `infobox.service` is provided in the `docs/` subdirectory:
+
+```
+$ cp docs/infobox.service /lib/systemd/system/
+$ systemctl daemon-reload
+$ service infobox start
+```
+
 
 # Caveats
 

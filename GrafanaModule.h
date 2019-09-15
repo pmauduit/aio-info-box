@@ -13,6 +13,7 @@ class GrafanaModule {
     double getCurrentOutdoorTemperature() const;
     double getCurrentOutdoorPm10() const;
     double getCurrentOutdoorPm25() const;
+    double getYesterdayElectricConsumption() const;
 
   private:
     CURL * curlCtx = NULL;

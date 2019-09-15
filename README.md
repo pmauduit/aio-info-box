@@ -58,6 +58,16 @@ $ i2cdetect -y 1
 
 Then we have to adapt in the source code (`main.cpp`) the constant `LC_ADDRESS`.
 
+## Wiring the button
+
+A button allows to switch to the next item to be displayed. It is hardcoded to
+use the GPIO 16 (in the `Wpi*` scheme), see:
+https://raw.githubusercontent.com/ppelleti/hs-wiringPi/master/pin-diagram.png
+
+One of the pin has to be wired onto the "pin 16", the other one can go onto a
+3.3V output.
+
+
 # Caveats
 
 The LCD screen is unable to print out accented characters, and well we are

@@ -29,7 +29,7 @@ library in C++, and I wanted to dig in the language once again.
 
 # Prototype
 
-## Screenshot
+## Screenshot
 
 ![LCD screen plugged into a Raspberry PI via I2C](docs/liquid-crystal-lcd.jpg)
 
